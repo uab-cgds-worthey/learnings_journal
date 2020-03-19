@@ -1,5 +1,9 @@
 # Snakemake
 
+- [Snakemake](#snakemake)
+  - [Issues](#issues)
+    - [Not removing output files of failed jobs in cluster](#not-removing-output-files-of-failed-jobs-in-cluster)
+
 ## Issues
 
 ### Not removing output files of failed jobs in cluster
