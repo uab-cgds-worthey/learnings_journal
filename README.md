@@ -6,3 +6,4 @@ Repository to document tips and tricks we learn on how to use certain tools.
 
 * [Containers](./docs/containers.md)
 * [Snakemake](./docs/snakemake.md)
+* [Random tips and tricks](./docs/random_stuff.md)
