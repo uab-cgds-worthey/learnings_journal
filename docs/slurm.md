@@ -22,7 +22,7 @@
 
 * https://support.nesi.org.nz/hc/en-gb/articles/360000691716-SLURM-Reference-Sheet
 * https://docs.rc.fas.harvard.edu/kb/convenient-slurm-commands/
-* And Mana's (yup, that's a shemeless plug): https://github.com/ManavalanG/random_notes/blob/master/notes/slurm.md
+* And [Mana's (yup, that's a shemeless plug)](https://github.com/ManavalanG/random_notes/blob/master/notes/slurm.md)
 
 
 ## FAQ
