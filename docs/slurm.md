@@ -1,3 +1,12 @@
+- [Slurm](#slurm)
+  - [Resources](#resources)
+    - [UAB's cheaha](#uabs-cheaha)
+    - [Slurm cheat/reference sheet](#slurm-cheatreference-sheet)
+  - [FAQ](#faq)
+    - [Considerations in best choosing resources for jobs](#considerations-in-best-choosing-resources-for-jobs)
+    - [Use of `mem` vs `mem-per-cpu`](#use-of-mem-vs-mem-per-cpu)
+    - [How busy is cheaha?](#how-busy-is-cheaha)
+
 # Slurm
 
 ## Resources

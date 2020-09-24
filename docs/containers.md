@@ -1,5 +1,5 @@
-# Containers
-
+- [Containers](#containers)
+  - [Tutorial resources](#tutorial-resources)
   - [Singularity](#singularity)
     - [Troubleshooting:](#troubleshooting)
       - [Using snakemake with Singularity and Conda](#using-snakemake-with-singularity-and-conda)
@@ -7,13 +7,19 @@
     - [Docker](#docker)
     - [Singularity](#singularity-1)
 
+# Containers
+
+## Tutorial resources
+
+* [Research Computing's tutorial on Singularity](https://gitlab.rc.uab.edu/rc-training-sessions/singularity_containers/-/tree/master)
+
 
 ## Singularity
 
 - By default singularity bind mounts `/home/$USER`, `/tmp`, and `$PWD` into your container at runtime. [Source](https://singularity.lbl.gov/quickstart#working-with-files).
   - If mounting home is undesirable, it may be turned off. For singularity run, these options are available:
 
-    ```
+    ```sh
     -H|--home <spec>    A home directory specification.  spec can either be a
                         src path or src:dest pair.  src is the source path
                         of the home directory outside the container and dest
