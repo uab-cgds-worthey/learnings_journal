@@ -1,0 +1,35 @@
+# safety
+alias rmi="rm -i"
+alias cpi="cp -i"
+alias mvi="mv -i"
+
+# simplicity
+alias ll="ls -lh"
+
+# Directory change
+alias data="cd $USER_DATA"
+alias home="cd $HOME"
+
+# file space
+function posix_find_size(){
+    du --block-size=2 $@ 2>/dev/null | awk '{
+         u="+Ki+Mi+Gi+Ti+Pi+Ei";
+         split(u, unit, "+");
+         v=$1;
+         for(i=1;i<7;i++) {
+           if(v<1024) break;
+           v/=1024;
+         }
+         printf("%.3f %sB\t%s\n", v, unit[i], $2);
+       }'
+}
+
+alias ds=posix_find_size
+
+# slurm
+alias inodebig="srun --ntasks=1 --cpus-per-task=4 --mem-per-cpu=4096 --time=02:00:00 --partition=interactive --job-name=cgd_inter --pty /bin/bash"
+alias inodesmall="srun --ntasks=1 --cpus-per-task=1 --mem-per-cpu=2048 --time=02:00:00 --partition=interactive --job-name=cgds_inter --pty /bin/bash"
+
+# conda
+alias conda_activate="conda activate"
+alias conda_deactivate="conda deactivate"
