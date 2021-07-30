@@ -14,7 +14,7 @@ function experimental_pipelines(){
 
 alias projects="cd /data/project/worthey_lab/projects"
 alias worthey_lab="cd /data/project/worthey_lab"
-alias experimental_pipeline=experimental_pipelines
+alias exp_pipes=experimental_pipelines
 alias scratch="cd $USER_SCRATCH"
 
 # conda commands
