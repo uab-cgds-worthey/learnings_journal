@@ -16,7 +16,7 @@ fi
 |----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
 | projects                               | Change directory to the projects directory (`/data/project/worthey_lab/projects`)                                                   |
 | worthey_lab                            | Change directory to the lab space (`/data/project/worthey_lab`)                                                                     |
-| exp_pipes <directory_name> | Change directory to experimental pipelines directory (`/data/project/worthey_lab/projects/experimental_pipelines/<directory_name>`) |
+| exp_pipes \<directory_name\> | Change directory to experimental pipelines directory (`/data/project/worthey_lab/projects/experimental_pipelines/<directory_name>`) |
 | scratch                                | Change directory to user scratch directory                                                                                          |
 | codicem                                | Load codicem                                                                                                                        |
 | congenica                              | Load congenica                                                                                                                      |
