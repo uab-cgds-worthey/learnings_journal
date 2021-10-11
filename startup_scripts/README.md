@@ -41,7 +41,7 @@ This script contains optional commands that are useful.
 Locate `.bashrc` and `.zshrc` in `$HOME` and add the following lines:
 ```bash
 if [ -f "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.helpful_startup_commands"]; then
-    . "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.helpful_startup_commands
+    . "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.helpful_startup_commands"
 fi
 ``` 
 #### **commands**
