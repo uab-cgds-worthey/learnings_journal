@@ -1,14 +1,14 @@
-# Common RC Scripts
+# Common Startup Scripts
 Scripts to create shared bash and zsh commands for Cheaha.
 
 ## Scripts
-### .requiredrc
-A script with all the commands required based on commonly used pipelines, directories, and tools. 
+### `.recommended_startup_commands`
+A script with all recommended commands based on commonly used pipelines, directories, and tools. 
 #### **How to use**
 Locate `.bashrc` and `.zshrc` in the `$HOME` directory and add the following lines:
 ```bash
-if [ -f "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.requiredrc"]; then
-    . "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.requiredrc"
+if [ -f "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.recommended_startup_commands"]; then
+    . "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.recommended_startup_commands"
 fi
 ```
 #### **commands**
@@ -35,13 +35,13 @@ fi
 | SR jobid                               | Status information for a job                                                                                                        |
 
 
-### `.recommendedrc`
+### `.helpful_startup_commands`
 This script contains optional commands that are useful.
 #### **How to use**
 Locate `.bashrc` and `.zshrc` in `$HOME` and add the following lines:
 ```bash
-if [ -f "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.recommendedrc"]; then
-    . "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.recommendedrc"
+if [ -f "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.helpful_startup_commands"]; then
+    . "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.helpful_startup_commands
 fi
 ``` 
 #### **commands**
