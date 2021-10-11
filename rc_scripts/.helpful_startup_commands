@@ -27,5 +27,5 @@ function posix_find_size(){
 alias ds=posix_find_size
 
 # slurm
-alias interbig="srun --ntasks=1 --cpus-per-task=4 --mem-per-cpu=4096 --time=02:00:00 --partition=interactive --job-name=cgd_inter --pty /bin/bash"
+alias interbig="srun --ntasks=1 --cpus-per-task=4 --mem-per-cpu=4096 --time=02:00:00 --partition=interactive --job-name=cgds_inter --pty /bin/bash"
 alias intersmall="srun --ntasks=1 --cpus-per-task=1 --mem-per-cpu=2048 --time=02:00:00 --partition=interactive --job-name=cgds_inter --pty /bin/bash"
