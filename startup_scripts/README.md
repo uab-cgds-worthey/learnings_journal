@@ -7,8 +7,8 @@ A script with all recommended commands based on commonly used pipelines, directo
 #### **How to use**
 Locate `.bashrc` and `.zshrc` in the `$HOME` directory and add the following lines:
 ```bash
-if [ -f "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.recommended_startup_commands"]; then
-    . "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.recommended_startup_commands"
+if [ -f "/data/project/worthey_lab/tools/learnings_journal/startup_scripts/.recommended_startup_commands"]; then
+    . "/data/project/worthey_lab/tools/learnings_journal/startup_scripts/.recommended_startup_commands"
 fi
 ```
 #### **commands**
@@ -40,8 +40,8 @@ This script contains optional commands that are useful.
 #### **How to use**
 Locate `.bashrc` and `.zshrc` in `$HOME` and add the following lines:
 ```bash
-if [ -f "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.helpful_startup_commands"]; then
-    . "/data/project/worthey_lab/tools/learnings_journal/rc_scripts/.helpful_startup_commands"
+if [ -f "/data/project/worthey_lab/tools/learnings_journal/startup_scripts/.helpful_startup_commands"]; then
+    . "/data/project/worthey_lab/tools/learnings_journal/startup_scripts/.helpful_startup_commands"
 fi
 ``` 
 #### **commands**
