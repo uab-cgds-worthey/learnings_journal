@@ -17,13 +17,6 @@ alias worthey_lab="cd /data/project/worthey_lab"
 alias exp_pipes=experimental_pipelines
 alias scratch="cd $USER_SCRATCH"
 
-# conda commands
-alias conda_create_env="conda env create -f"
-alias conda_update_env="conda env update -f"
-alias conda_list_env="conda env list"
-alias conda_export_env="conda env export -n $1 > environment.yml"
-alias conda_remove_env="conda env remove -n"
-
 # codicem
 function load_codicem(){
     conda activate codicem_env
