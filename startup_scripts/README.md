@@ -31,8 +31,8 @@ fi
 | SQ                                     | Well formatted squeue                                                                                                               |
 | SQ_long                                | Well formatted squeue with submission time and command ran info                                                                     |
 | njobs                                  | Number of jobs running                                                                                                              |
-| scontr jobid                           | Information for a particular job                                                                                                    |
-| SR jobid                               | Status information for a job                                                                                                        |
+| scontr jobid                           | Information for a particular job (*Note: This alias only works for currently running jobs and not for completed/pending jobs*)                                                                                                    |
+| SR jobid                               | Status information for a job (*Note: This alias only works for currently running jobs and not for completed/pending jobs*)                                                                                                       |
 
 
 ### `.helpful_startup_commands`
