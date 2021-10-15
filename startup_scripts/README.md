@@ -49,7 +49,9 @@ fi
 |-----------------------|----------------------------------------------------------------------------------------------------|
 | rmi file              | Interactive remove                                                                                 |
 | cpi                   | Interactive copy when overwriting a file                                                           |
-| mvi \<source\> \<target\> | Interactive move when overwriting a file                                                           |
+| rm file              | Interactive remove (overrides default `rm` functionality for safety)                                                                                |
+| cp                   | Interactive copy when overwriting a file (overrides default `cp` functionality for safety)                                                          |
+| mv \<source\> \<target\> | Interactive move when overwriting a file (overrides default `mv` functionality for safety)                                                          |
 | ll                    | List files in long format                                                                          |
 | data                  | Change directory to user data directory                                                            |
 | home                  | Change directory to user home directory                                                            |
