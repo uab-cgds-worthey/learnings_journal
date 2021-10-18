@@ -1,0 +1,80 @@
+module reset
+module load slurm
+module load git/2.8.0-foss-2016a
+
+# Directory change
+function experimental_pipelines(){
+    if [ "$#" -ne 1 ]; then
+        echo "Usage:"
+        echo "experimemtal_pipeline directory_name"
+    else
+        cd "/data/project/worthey_lab/projects/experimental_pipelines/$1"
+    fi
+}
+
+alias projects="cd /data/project/worthey_lab/projects"
+alias worthey_lab="cd /data/project/worthey_lab"
+alias exp_pipes=experimental_pipelines
+alias scratch="cd $USER_SCRATCH"
+
+# codicem
+function load_codicem(){
+    conda activate codicem_env
+    cd /data/project/worthey_lab/tools/codicem/codicem-provision/sample-loader/cluster
+}
+
+alias codicem=load_codicem
+
+# congenica
+function load_congenica(){
+    module reset
+    module load Python/2.7.13-foss-2016b
+    source /data/project/worthey_lab/tools/sapientia-client-2.3.0.3/congenica/bin/activate  # commented out by conda initialize
+    sapientia test
+}
+
+alias congenica=load_congenica
+
+# pipeline
+function status_smvp(){
+    find "$SMVP_LOGS_DIR" -maxdepth 1 -name "*.err" -mtime -$1 -print0 | xargs -0 /data/project/worthey_lab/tools/pipeline-status-scripts/pretty_status_snakemake_pipeline.sh
+}
+
+function status_svp(){
+    find "$SVP_LOGS_DIR" -maxdepth 1 -name "*.err" -mtime -$1 -print0 | xargs -0 /data/project/worthey_lab/tools/pipeline-status-scripts/pretty_status_snakemake_pipeline.sh
+}
+
+SMVP_LOGS_DIR="/data/project/worthey_lab/projects/production_pipelines/logs/small_variant_caller_pipeline/"
+SVP_LOGS_DIR="/data/project/worthey_lab/projects/production_pipelines/logs/manta_sv_caller_pipeline/"
+export SMVP_LOGS_DIR
+export SVP_LOGS_DIR
+
+alias smvp_logs="cd $SMVP_LOGS_DIR"
+alias svp_logs="cd $SVP_LOGS_DIR"
+alias smvp_stat=status_smvp
+alias svp_stat=status_svp
+
+# SLURM
+srun_custom() {
+    if [ "$#" -ne 3 ]; then
+        echo "Usage:"
+        echo "SRUN_CUSTOM  cpus-per-task  mem-per-cpu  partition"
+    else
+        srun --ntasks=1 --cpus-per-task="$1" --mem-per-cpu="$2" --partition="$3" --pty /bin/bash
+    fi
+}
+
+function better_format_sacct(){
+    sacct --format="JobID,JobName,Ntasks,MaxRSS,Elapsed,state,NodeList,ReqMem,MaxVMSize,AveVMSize,Partition,AllocTRES%40" --units=M "$@"
+}
+
+alias srun_simple="srun --pty /bin/bash"
+alias srun_express="srun --ntasks=1 --cpus-per-task=4 --mem-per-cpu=4096 --partition=express --pty /bin/bash"
+alias srun_medium="srun --ntasks=1 --cpus-per-task=4 --mem-per-cpu=4096 --partition=medium --pty /bin/bash"
+alias SC=better_format_sacct
+
+alias SQ='squeue -o "%.8i %.20j %.10P %.7u %.5D %.4C %.11M  %.11l %.3t %.11m %R" -u $USER'
+alias SQ_long='squeue -o "%.8i %.20j %.10P %.7u %.5D %.11M  %.11l %.3t %.11m %R %V %o" -u $USER' 
+alias njobs="SQ -h | wc -l"
+alias scontr='scontrol show job -d'
+alias SR='sstat --format="JobID,NTasks,AveCPU,AvePages,AveRSS,AveVMSize,MaxRSSNode" --allsteps'
