@@ -10,22 +10,6 @@ alias ll="ls -lh"
 alias data="cd $USER_DATA"
 alias home="cd $HOME"
 
-# file space
-function posix_find_size(){
-    du --block-size=2 $@ 2>/dev/null | awk '{
-         u="+Ki+Mi+Gi+Ti+Pi+Ei";
-         split(u, unit, "+");
-         v=$1;
-         for(i=1;i<7;i++) {
-           if(v<1024) break;
-           v/=1024;
-         }
-         printf("%.3f %sB\t%s\n", v, unit[i], $2);
-       }'
-}
-
-alias ds=posix_find_size
-
 # slurm
 alias interbig="srun --ntasks=1 --cpus-per-task=4 --mem-per-cpu=4096 --time=02:00:00 --partition=interactive --job-name=cgds_inter --pty /bin/bash"
 alias intersmall="srun --ntasks=1 --cpus-per-task=1 --mem-per-cpu=2048 --time=02:00:00 --partition=interactive --job-name=cgds_inter --pty /bin/bash"
