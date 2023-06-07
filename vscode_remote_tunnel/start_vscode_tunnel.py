@@ -30,7 +30,7 @@ def create_dirpath(arg):
     return dpath
 
 
-def write_script(cpu, mem_per_cpu, partition, logdir):
+def write_script(cpu, mem_per_cpu, partition, logdir, include_node, exclude_node):
     "constructs slurm job script and writes to file"
 
     Path(logdir).mkdir(parents=True, exist_ok=True)
@@ -44,6 +44,15 @@ def write_script(cpu, mem_per_cpu, partition, logdir):
 #SBATCH --mem={mem_per_cpu}
 #SBATCH --partition={partition}
 #SBATCH --output={logdir}/%x_%j.log
+"""
+    
+    if include_node:
+        script_txt += f"#SBATCH --nodelist={include_node}\n"
+
+    if exclude_node:
+        script_txt += f"#SBATCH --exclude={exclude_node}\n"
+
+    script_txt += f"""\
 
 code tunnel --name cheaha_tunnel
     """
@@ -98,7 +107,7 @@ def print_job_logs(log_dpath, sbatch_out):
 def main(args):
 
     # construct script to submit to slurm
-    script_fpath = write_script(args.cpu, args.mem_per_cpu, args.partition, args.logdir)
+    script_fpath = write_script(args.cpu, args.mem_per_cpu, args.partition, args.logdir, include_node=args.nodelist, exclude_node=args.exclude)
 
     # submit script to slurm or print its contents
     if args.print_script:
@@ -106,9 +115,9 @@ def main(args):
     else:
         sbatch_out = run_shell_command("sbatch", script_fpath)
 
-    # wait for job to start and print log file contents.
-    # this helps with showing github link and access code
-    print_job_logs(args.logdir, sbatch_out)
+        # wait for job to start and print log file contents.
+        # this helps with showing github link and access code
+        print_job_logs(args.logdir, sbatch_out)
 
     return None
 
@@ -140,6 +149,20 @@ if __name__ == "__main__":
         "--partition",
         help="Slurm partition to request",
         default="express",
+        metavar="",
+    )
+    
+    PARSER.add_argument(
+        "--nodelist",
+        help="Request a specific list of hosts (nodes). See sbatch's --nodelist on how to use this option - https://slurm.schedmd.com/sbatch.html",
+        default="",
+        metavar="",
+    )
+
+    PARSER.add_argument(
+        "--exclude",
+        help="Explicitly exclude certain nodes from the resources granted to the job. See here on how to use this option - https://stackoverflow.com/a/26246348/3998252",
+        default="",
         metavar="",
     )
 
