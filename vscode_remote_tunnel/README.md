@@ -24,6 +24,9 @@ Run the script in slurm cluster.
 
 # example custom usage
 ./start_vscode_tunnel.py --cpu 4 --mem-per-cpu "4G" --partition short 
+
+# request for a particular node(s)
+./start_vscode_tunnel.py --nodelist c[0167-0171]
 ```
 
 ## How to get started with VScode remote tunneling in Cheaha
