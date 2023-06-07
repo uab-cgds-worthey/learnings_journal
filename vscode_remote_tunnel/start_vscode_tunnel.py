@@ -98,6 +98,7 @@ def print_job_logs(log_dpath, sbatch_out):
 
     time.sleep(3)  # give vscode time to setup server
 
+    print (f"Log filepath: {log_fpath}")
     # now print the file contents
     run_shell_command("cat", log_fpath)
 
