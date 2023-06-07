@@ -45,7 +45,7 @@ def write_script(cpu, mem_per_cpu, partition, logdir, include_node, exclude_node
 #SBATCH --partition={partition}
 #SBATCH --output={logdir}/%x_%j.log
 """
-    
+
     if include_node:
         script_txt += f"#SBATCH --nodelist={include_node}\n"
 
@@ -55,7 +55,7 @@ def write_script(cpu, mem_per_cpu, partition, logdir, include_node, exclude_node
     script_txt += f"""\
 
 code tunnel --name cheaha_tunnel
-    """
+"""
 
     with tempfile.NamedTemporaryFile(
         mode="w", encoding="utf-8", delete=False
@@ -98,7 +98,7 @@ def print_job_logs(log_dpath, sbatch_out):
 
     time.sleep(3)  # give vscode time to setup server
 
-    print (f"Log filepath: {log_fpath}")
+    print(f"Log filepath: {log_fpath}")
     # now print the file contents
     run_shell_command("cat", log_fpath)
 
@@ -108,7 +108,14 @@ def print_job_logs(log_dpath, sbatch_out):
 def main(args):
 
     # construct script to submit to slurm
-    script_fpath = write_script(args.cpu, args.mem_per_cpu, args.partition, args.logdir, include_node=args.nodelist, exclude_node=args.exclude)
+    script_fpath = write_script(
+        args.cpu,
+        args.mem_per_cpu,
+        args.partition,
+        args.logdir,
+        include_node=args.nodelist,
+        exclude_node=args.exclude,
+    )
 
     # submit script to slurm or print its contents
     if args.print_script:
@@ -152,7 +159,7 @@ if __name__ == "__main__":
         default="express",
         metavar="",
     )
-    
+
     PARSER.add_argument(
         "--nodelist",
         help="Request a specific list of hosts (nodes). See sbatch's --nodelist on how to use this option - https://slurm.schedmd.com/sbatch.html",
