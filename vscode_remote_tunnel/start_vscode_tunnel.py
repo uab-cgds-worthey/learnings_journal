@@ -66,7 +66,6 @@ code tunnel --name cheaha_tunnel
 
 
 def run_shell_command(command, fpath):
-
     result = subprocess.run([command, fpath], stdout=subprocess.PIPE)
     print(result.stdout.decode("utf-8"))
 
