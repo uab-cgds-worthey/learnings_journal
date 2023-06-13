@@ -6,6 +6,7 @@ Helper script [start_vscode_tunnel.py](./start_vscode_tunnel.py) makes initiatin
 * waits for slurm job to start running and displays its log file to show github url and access code, which are needed to access the remote tunnel in VScode
 * provides reasonable defaults 
 
+> ⚠️ NOTE: This helper script was developed to use with [Cheaha at UAB](https://docs.rc.uab.edu/). It likely can be modified to suit other cluster environments.
 
 ## Requirements
 

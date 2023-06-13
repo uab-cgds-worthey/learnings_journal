@@ -5,6 +5,9 @@ Helper script to run vscode remote tunnel job in slurm
 * provides reasonable defaults but they are configurable
 * creates and submits sbatch script to slurm
 * waits for log file and shows github url and access code
+
+Developed to use with Cheaha at UAB. It likely can be modified 
+to suit other cluster environments.
 """
 
 from pathlib import Path
