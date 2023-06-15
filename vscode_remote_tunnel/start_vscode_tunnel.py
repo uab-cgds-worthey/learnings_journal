@@ -91,9 +91,11 @@ def print_job_logs(log_dpath, sbatch_out):
         else:
             sleep_time += 1
 
-    time.sleep(3)  # give vscode time to setup server
+    waittime = 5
+    print(f"Slurm  job started. Allowing {waittime} secs to let VScode do its thing...")
+    time.sleep(waittime)  # give vscode time to setup server
 
-    print(f"Log filepath: {log_fpath}")
+    print(f"Log filepath: {log_fpath}\n")
     # now print the file contents
     run_shell_command("cat", log_fpath)
 
