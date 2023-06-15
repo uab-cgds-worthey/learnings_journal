@@ -35,7 +35,7 @@ Run the script in slurm cluster.
 
 ## How to get started with VScode remote tunneling in Cheaha
 
-Following are general instructions on how to start using VScode remote tunneling:
+Following are general instructions on how to start using VScode remote tunneling (based on [RC docs](https://github.com/uabrc/uabrc.github.io/issues/488)):
 
 * SSH into [cheaha](https://docs.rc.uab.edu/cheaha/getting_started/)
 * Download code cli tool (standalone binary) in cheaha
