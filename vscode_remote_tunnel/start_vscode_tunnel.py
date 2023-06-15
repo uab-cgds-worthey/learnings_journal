@@ -55,9 +55,7 @@ def write_script(cpu, mem_per_cpu, partition, logdir, include_node, exclude_node
         code tunnel --name cheaha_tunnel\
     """
 
-    with tempfile.NamedTemporaryFile(
-        mode="w", encoding="utf-8", delete=False
-    ) as script_fpath:
+    with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", delete=False) as script_fpath:
         script_fpath.write(textwrap.dedent(script_txt))
 
     return script_fpath.name
