@@ -12,6 +12,7 @@ to suit other cluster environments.
 
 from pathlib import Path
 import os.path
+import textwrap
 import subprocess
 import tempfile
 import time
@@ -38,32 +39,26 @@ def write_script(cpu, mem_per_cpu, partition, logdir, include_node, exclude_node
 
     Path(logdir).mkdir(parents=True, exist_ok=True)
 
+    newline = "\n"  # newline to use inside fstring (https://stackoverflow.com/a/44780467/3998252)
     script_txt = f"""\
-#!/bin/bash
-#
-#SBATCH --job-name=vscode_tunnel
-#SBATCH --ntasks=1
-#SBATCH --cpus-per-task={cpu}
-#SBATCH --mem={mem_per_cpu}
-#SBATCH --partition={partition}
-#SBATCH --output={logdir}/%x_%j.log
-"""
+        #!/bin/bash
+        #
+        #SBATCH --job-name=vscode_tunnel
+        #SBATCH --ntasks=1
+        #SBATCH --cpus-per-task={cpu}
+        #SBATCH --mem={mem_per_cpu}
+        #SBATCH --partition={partition}
+        #SBATCH --output={logdir}/%x_%j.log
+        {f"#SBATCH --nodelist={include_node}{newline}" if include_node else ""}\
+        {f"#SBATCH --exclude={exclude_node}{newline}" if exclude_node else ""}\
 
-    if include_node:
-        script_txt += f"#SBATCH --nodelist={include_node}\n"
-
-    if exclude_node:
-        script_txt += f"#SBATCH --exclude={exclude_node}\n"
-
-    script_txt += f"""\
-
-code tunnel --name cheaha_tunnel
-"""
+        code tunnel --name cheaha_tunnel\
+    """
 
     with tempfile.NamedTemporaryFile(
         mode="w", encoding="utf-8", delete=False
     ) as script_fpath:
-        script_fpath.write(script_txt)
+        script_fpath.write(textwrap.dedent(script_txt))
 
     return script_fpath.name
 
