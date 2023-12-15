@@ -52,7 +52,7 @@ def write_script(cpu, mem_per_cpu, partition, logdir, include_node, exclude_node
         {f"#SBATCH --nodelist={include_node}{newline}" if include_node else ""}\
         {f"#SBATCH --exclude={exclude_node}{newline}" if exclude_node else ""}\
 
-        code tunnel --name cheaha_tunnel\
+        code tunnel --name "${{SLURMD_NODENAME}}_cheaha_tunnel"\
     """
 
     with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", delete=False) as script_fpath:

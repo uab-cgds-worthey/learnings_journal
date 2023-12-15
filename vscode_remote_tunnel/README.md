@@ -54,6 +54,16 @@ mv code /home/$USER/bin
   * *Important!* It is recommended not to use the https://vscode.dev/ URL provided. That URL leads to an instance of
     VSCode running on a third party cloud service (provided by Microsoft) and is not known to be approved for sensitive
     nor protected data! Instead, please use local VSCode installations only on trusted UAB machines (e.g., your laptop).
+* Before connecting to the VSCode Server running on Cheaha ensure a particular setting on your *local, trusted machine*
+  is removed because it will cause your connection to the VSCode Server on Cheaha to fail!
+  * Locate your OS specific settings file (see 
+    https://code.visualstudio.com/docs/getstarted/settings#_settings-file-locations for where you can find it) and
+    open it for editing (*note*: this file may not exist if you haven't made custom settings for VSCode on your
+    local machine before)
+  * in the file look for a line with the setting `"terminal.integrated.inheritEnv": false` and delete it if you find it
+  * save the settings.json file, make sure to close VSCode if it's running on your local machine just to ensure the
+    updated settings are used when you open VSCode again
 * Open VSCode on your *local, trusted machine*, click the `><` button in the lower-left of the main VSCode window to
   open the command palette. Select “Connect to Tunnel...” to find your tunnel. The names of tunnels started on Cheaha
-  should be the same as the compute node hostname, e.g., `c0150`. You may be prompted to authenticate to GitHub.
+  should be the same as the compute node hostname followed by `_cheaha_tunnel`, e.g., `c0150_cheaha_tunnel`. You may
+  be prompted to authenticate to GitHub during the setup.
