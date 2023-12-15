@@ -61,6 +61,8 @@ mv code /home/$USER/bin
     open it for editing (*note*: this file may not exist if you haven't made custom settings for VSCode on your
     local machine before)
   * in the file look for a line with the setting `"terminal.integrated.inheritEnv": false` and delete it if you find it
+    see https://github.com/microsoft/vscode-remote-release/issues/1721#issuecomment-564522837 for info on why this
+    issue occurs and how it was figured out and resolved to make tunnel connections work
   * save the settings.json file, make sure to close VSCode if it's running on your local machine just to ensure the
     updated settings are used when you open VSCode again
 * Open VSCode on your *local, trusted machine*, click the `><` button in the lower-left of the main VSCode window to
