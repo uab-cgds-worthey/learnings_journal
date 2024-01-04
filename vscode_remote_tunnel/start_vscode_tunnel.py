@@ -34,11 +34,14 @@ def create_dirpath(arg):
     return dpath
 
 
-def write_script(cpu, mem_per_cpu, partition, logdir, include_node, exclude_node):
+def write_script(cpu, mem_per_cpu, partition, logdir, tunnel_name, include_node, exclude_node):
     "constructs slurm job script and writes to file"
 
     Path(logdir).mkdir(parents=True, exist_ok=True)
 
+    if not tunnel_name:
+        tunnel_name = "${SLURMD_NODENAME}_cheaha_tunnel"
+    
     newline = "\n"  # newline to use inside fstring (https://stackoverflow.com/a/44780467/3998252)
     script_txt = f"""\
         #!/bin/bash
@@ -52,7 +55,7 @@ def write_script(cpu, mem_per_cpu, partition, logdir, include_node, exclude_node
         {f"#SBATCH --nodelist={include_node}{newline}" if include_node else ""}\
         {f"#SBATCH --exclude={exclude_node}{newline}" if exclude_node else ""}\
 
-        code tunnel --name "${{SLURMD_NODENAME}}_cheaha_tunnel"\
+        code tunnel --name "{tunnel_name}"\
     """
 
     with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", delete=False) as script_fpath:
@@ -110,6 +113,7 @@ def main(args):
         args.mem_per_cpu,
         args.partition,
         args.logdir,
+        args.name,
         include_node=args.nodelist,
         exclude_node=args.exclude,
     )
@@ -167,6 +171,13 @@ if __name__ == "__main__":
     PARSER.add_argument(
         "--exclude",
         help="Explicitly exclude certain nodes from the resources granted to the job. See here on how to use this option - https://stackoverflow.com/a/26246348/3998252",
+        default="",
+        metavar="",
+    )
+
+    PARSER.add_argument(
+        "--name",
+        help="Tunnel name to use. Sets the machine name for port forwarding service.",
         default="",
         metavar="",
     )
