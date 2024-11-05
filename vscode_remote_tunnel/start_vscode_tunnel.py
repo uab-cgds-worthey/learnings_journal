@@ -6,7 +6,7 @@ Helper script to run vscode remote tunnel job in slurm
 * creates and submits sbatch script to slurm
 * waits for log file and shows github url and access code
 
-Developed to use with Cheaha at UAB. It likely can be modified 
+Developed to use with Cheaha at UAB. It likely can be modified
 to suit other cluster environments.
 """
 
@@ -34,14 +34,14 @@ def create_dirpath(arg):
     return dpath
 
 
-def write_script(cpu, mem_per_cpu, partition, logdir, tunnel_name, include_node, exclude_node):
+def write_script(cpu, gpu, mem, partition, logdir, tunnel_name, include_node, exclude_node):
     "constructs slurm job script and writes to file"
 
     Path(logdir).mkdir(parents=True, exist_ok=True)
 
     if not tunnel_name:
         tunnel_name = "${SLURMD_NODENAME}_cheaha_tunnel"
-    
+
     newline = "\n"  # newline to use inside fstring (https://stackoverflow.com/a/44780467/3998252)
     script_txt = f"""\
         #!/bin/bash
@@ -49,7 +49,8 @@ def write_script(cpu, mem_per_cpu, partition, logdir, tunnel_name, include_node,
         #SBATCH --job-name=vscode_tunnel
         #SBATCH --ntasks=1
         #SBATCH --cpus-per-task={cpu}
-        #SBATCH --mem={mem_per_cpu}
+        #SBATCH --gres=gpu:{gpu}
+        #SBATCH --mem={mem}
         #SBATCH --partition={partition}
         #SBATCH --output={logdir}/%x_%j.log
         {f"#SBATCH --nodelist={include_node}{newline}" if include_node else ""}\
@@ -110,7 +111,8 @@ def main(args):
     # construct script to submit to slurm
     script_fpath = write_script(
         args.cpu,
-        args.mem_per_cpu,
+        args.gpu,
+        args.mem,
         args.partition,
         args.logdir,
         args.name,
@@ -146,9 +148,17 @@ if __name__ == "__main__":
     )
 
     PARSER.add_argument(
+        "-g",
+        "--gpu",
+        help="No. of GPUs to request",
+        default=0,
+        metavar="",
+    )
+
+    PARSER.add_argument(
         "-m",
-        "--mem-per-cpu",
-        help="Memory per CPU to request",
+        "--mem",
+        help="Total memory to request",
         default="8G",
         metavar="",
     )
