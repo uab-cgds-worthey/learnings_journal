@@ -36,7 +36,7 @@ Run the script in slurm cluster.
 ## How to get started with VScode remote tunneling in Cheaha
 
 > [!IMPORTANT]  
-> Linux OS used in Cheaha [no longer supported by
+> Linux OS used in Cheaha is [no longer supported by
 > VSCode](https://code.visualstudio.com/docs/remote/faq#_can-i-run-vs-code-server-on-older-linux-distributions). As a
 > result, we are currently limited to using VSCode version 1.98.2 until the OS is upgraded.
 >
