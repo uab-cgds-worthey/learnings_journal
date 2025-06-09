@@ -38,7 +38,7 @@ Run the script in slurm cluster.
 > [!IMPORTANT]  
 > Linux OS used in Cheaha is [no longer supported by
 > VSCode](https://code.visualstudio.com/docs/remote/faq#_can-i-run-vs-code-server-on-older-linux-distributions). As a
-> result, we are currently limited to using VSCode version 1.98.2 until the OS is upgraded.
+> result, we are currently limited to using VSCode version <=1.98.2 until the OS is upgraded.
 >
 >* Both your local machine's VSCode installation and the Cheaha server's VSCode instance are restricted to this older
 > version.
