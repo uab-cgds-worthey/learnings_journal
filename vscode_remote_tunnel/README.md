@@ -35,13 +35,25 @@ Run the script in slurm cluster.
 
 ## How to get started with VScode remote tunneling in Cheaha
 
+> [!IMPORTANT]  
+> Linux OS used in Cheaha is [no longer supported by
+> VSCode](https://code.visualstudio.com/docs/remote/faq#_can-i-run-vs-code-server-on-older-linux-distributions). As a
+> result, we are currently limited to using VSCode version <=1.98.2 until the OS is upgraded.
+>
+>* Both your local machine's VSCode installation and the Cheaha server's VSCode instance are restricted to this older
+> version.
+>* To ensure remote tunneling works properly, please **disable automated version updates** on your local machine's
+>VSCode installation.
+>
+> For more info, [see this issue](https://github.com/uab-cgds-worthey/learnings_journal/issues/6).
+
 Following are general instructions on how to start using VScode remote tunneling (based on [RC docs](https://github.com/uabrc/uabrc.github.io/issues/488)):
 
 * SSH into [cheaha](https://docs.rc.uab.edu/cheaha/getting_started/)
 * Download code cli tool (standalone binary) in cheaha
 
 ```sh
-curl -Lk 'https://code.visualstudio.com/sha/download?build=stable&os=cli-alpine-x64' --output vscode_cli.tar.gz
+curl -Lk 'https://update.code.visualstudio.com/1.98.2/cli-linux-x64/stable' --output vscode_cli.tar.gz
 tar -xf vscode_cli.tar.gz
 # move it to bin dir
 mv code /home/$USER/bin
