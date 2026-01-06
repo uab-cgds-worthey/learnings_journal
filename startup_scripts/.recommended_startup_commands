@@ -77,6 +77,7 @@ function recall_git() {
         echo "Error: can't run git repo file recall on login node. File recall to GPFS should only be run on compute nodes."
         echo "Solution: Consider starting an interactive job and running this command there."
     else
+        module load parallel
         git ls-files -m | parallel -j ${SLURM_NTASKS} head -c1 {} > /dev/null
     fi
 }
