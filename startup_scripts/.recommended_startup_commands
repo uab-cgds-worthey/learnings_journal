@@ -65,8 +65,16 @@ function recall_dir() {
         echo "Error: can't run GPFS file recall on login node. File recall to GPFS should only be run on compute nodes."
         echo "Solution: Consider starting an interactive job and running this command there."
     else
-        module load parallel
-        find "$(realpath $1)" -type f -print0 | parallel --null -j ${SLURM_CPUS_ON_NODE} -n10 head -c1 {} > /dev/null
+        local DIR2RECALL="$(realpath $1)"
+        # `du` returns zero blocks used on disk (GPFS in this case) for files that are on CEPH
+        local RECALL_FILE_CNT=$(find "${DIR2RECALL}" -type f -exec du {} + | awk 'BEGIN{cntr=0} {if($1 == 0){cntr=cntr+1}} END{print cntr}')
+        if [ ${RECALL_FILE_CNT} -gt 0 ]; then
+            echo "Recalling ${RECALL_FILE_CNT} files to GPFS..."
+            module load parallel
+            find "${DIR2RECALL}" -type f -exec du {} + | awk '($1 == 0){print $2}' | parallel -j ${SLURM_CPUS_ON_NODE} head -c1 {} >/dev/null
+        else
+            echo "All files in ${DIR2RECALL} are already in GPFS, nothing needs to be done."
+        fi
     fi
 }
 
@@ -77,9 +85,14 @@ function recall_git() {
         echo "Error: can't run git repo file recall on login node. File recall to GPFS should only be run on compute nodes."
         echo "Solution: Consider starting an interactive job and running this command there."
     else
-        module load parallel
-        git ls-files | parallel -j ${SLURM_CPUS_ON_NODE} head -c1 {} > /dev/null
+        # `du` returns zero blocks used on disk (GPFS in this case) for files that are on CEPH
+        local RECALL_FILE_CNT=$(git ls-files | xargs du | awk 'BEGIN{cntr=0} {if($1 == 0){cntr=cntr+1}} END{print cntr}')
+        if [ ${RECALL_FILE_CNT} -gt 0 ]; then
+            echo "Recalling ${RECALL_FILE_CNT} files to GPFS..."
+            module load parallel
+            git ls-files | xargs du | awk '($1 == 0){print $2}' | parallel -j ${SLURM_CPUS_ON_NODE} head -c1 {} >/dev/null
+        else
+            echo "All tracked files in $(git rev-parse --show-toplevel) are already in GPFS, nothing needs to be done."
+        fi
     fi
 }
-
-
