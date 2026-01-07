@@ -66,7 +66,7 @@ function recall_dir() {
         echo "Solution: Consider starting an interactive job and running this command there."
     else
         module load parallel
-        find "$(realpath $1)" -type f -print0 | parallel --null -j ${SLURM_NTASKS} -n10 head -c1 {} > /dev/null
+        find "$(realpath $1)" -type f -print0 | parallel --null -j ${SLURM_CPUS_ON_NODE} -n10 head -c1 {} > /dev/null
     fi
 }
 
@@ -78,7 +78,7 @@ function recall_git() {
         echo "Solution: Consider starting an interactive job and running this command there."
     else
         module load parallel
-        git ls-files -m | parallel -j ${SLURM_NTASKS} head -c1 {} > /dev/null
+        git ls-files | parallel -j ${SLURM_CPUS_ON_NODE} head -c1 {} > /dev/null
     fi
 }
 
