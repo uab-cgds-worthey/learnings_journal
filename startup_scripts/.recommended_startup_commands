@@ -56,43 +56,67 @@ alias scontr='scontrol show job -d'
 alias SR='sstat --format="JobID,NTasks,AveCPU,AvePages,AveRSS,AveVMSize,MaxRSSNode" --allsteps'
 
 # GPFS
+# general file recall function
+function gen_file_recall() {
+    if [ ! -n "${SLURM_JOB_ID+x}" ]; then
+        echo "Error: can't run GPFS file recall on login node. File recall to GPFS should only be run on compute nodes."
+        echo "Solution: Consider starting an interactive job and running this command there."
+    else
+        local DIR2RECALL="$(realpath $1)"
+        local LISTING_METHOD="$2"
+
+        if [[ "${LISTING_METHOD}" == "git" ]]; then
+            # get list of files that are truly empty files (eg. .gitkeep) tracked by the repo
+            mapfile -t TRUE_EMPTY_FILES < <(git ls-files | xargs du --apparent-size | awk '($1 == 0){print $2}')
+
+            # get list of files that `du` returns zero blocks used on disk (GPFS in this case) for files that are on CEPH
+            mapfile -t NO_SIZE_FILES < <(git ls-files | xargs du | awk '($1 == 0){print $2}')
+        else
+            # get list of files that are truly empty files (eg. .gitkeep) tracked by the repo
+            mapfile -t TRUE_EMPTY_FILES < <(find "${DIR2RECALL}" -type f -exec du --apparent-size {} + | awk '($1 == 0){print $2}')
+
+            # get list of files that `du` returns zero blocks used on disk (GPFS in this case) for files that are on CEPH
+            mapfile -t NO_SIZE_FILES < <(find "${DIR2RECALL}" -type f -exec du {} + | awk '($1 == 0){print $2}')
+        fi
+
+        # remove true empty files from list of files with zero disk usage to make a list of files
+        # that actually need to be recalled
+        for element_to_remove in "${TRUE_EMPTY_FILES[@]}"; do
+            # Iterate over indices of NO_SIZE_FILES to find the matching element
+            for i in "${!NO_SIZE_FILES[@]}"; do
+                if [[ "${NO_SIZE_FILES[$i]}" == "$element_to_remove" ]]; then
+                    # Unset (remove) the matching element from NO_SIZE_FILES
+                    unset 'NO_SIZE_FILES[i]'
+                fi
+            done
+        done
+
+        # Re-index the array after removal
+        NO_SIZE_FILES=("${NO_SIZE_FILES[@]}")
+
+        local RECALL_FILE_CNT=${#NO_SIZE_FILES[@]}
+        if [ ${RECALL_FILE_CNT} -gt 0 ]; then
+            echo "Recalling ${RECALL_FILE_CNT} files to GPFS..."
+            module load parallel
+            printf "%s\n" "${NO_SIZE_FILES[@]}" | parallel -j ${SLURM_CPUS_ON_NODE} head -c1 {} >/dev/null
+        else
+            echo "Requested files in ${DIR2RECALL} are already in GPFS, nothing needs to be done."
+        fi
+    fi
+}
+
 # recall all files in a directory to GPFS (from CEPH)
 function recall_dir() {
     if [ "$#" -ne 1 ]; then
         echo "Usage:"
         echo "recall_dir <dir-path>"
-    elif [ ! -n "${SLURM_JOB_ID+x}" ]; then
-        echo "Error: can't run GPFS file recall on login node. File recall to GPFS should only be run on compute nodes."
-        echo "Solution: Consider starting an interactive job and running this command there."
     else
-        local DIR2RECALL="$(realpath $1)"
-        # `du` returns zero blocks used on disk (GPFS in this case) for files that are on CEPH
-        local RECALL_FILE_CNT=$(find "${DIR2RECALL}" -type f -exec du {} + | awk 'BEGIN{cntr=0} {if($1 == 0){cntr=cntr+1}} END{print cntr}')
-        if [ ${RECALL_FILE_CNT} -gt 0 ]; then
-            echo "Recalling ${RECALL_FILE_CNT} files to GPFS..."
-            module load parallel
-            find "${DIR2RECALL}" -type f -exec du {} + | awk '($1 == 0){print $2}' | parallel -j ${SLURM_CPUS_ON_NODE} head -c1 {} >/dev/null
-        else
-            echo "All files in ${DIR2RECALL} are already in GPFS, nothing needs to be done."
-        fi
+        gen_file_recall "$(realpath $1)" "dir"
     fi
 }
 
 # recall all tracked files in a git repo so git doesn't think tons of changes happened
 # assumes the current working directory is part of the git repo being recalled
 function recall_git() {
-    if [ ! -n "${SLURM_JOB_ID+x}" ]; then
-        echo "Error: can't run git repo file recall on login node. File recall to GPFS should only be run on compute nodes."
-        echo "Solution: Consider starting an interactive job and running this command there."
-    else
-        # `du` returns zero blocks used on disk (GPFS in this case) for files that are on CEPH
-        local RECALL_FILE_CNT=$(git ls-files | xargs du | awk 'BEGIN{cntr=0} {if($1 == 0){cntr=cntr+1}} END{print cntr}')
-        if [ ${RECALL_FILE_CNT} -gt 0 ]; then
-            echo "Recalling ${RECALL_FILE_CNT} files to GPFS..."
-            module load parallel
-            git ls-files | xargs du | awk '($1 == 0){print $2}' | parallel -j ${SLURM_CPUS_ON_NODE} head -c1 {} >/dev/null
-        else
-            echo "All tracked files in $(git rev-parse --show-toplevel) are already in GPFS, nothing needs to be done."
-        fi
-    fi
+    gen_file_recall "$(git rev-parse --show-toplevel)" "git"
 }
