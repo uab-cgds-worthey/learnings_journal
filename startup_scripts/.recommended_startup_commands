@@ -81,24 +81,13 @@ function gen_file_recall() {
 
         # remove true empty files from list of files with zero disk usage to make a list of files
         # that actually need to be recalled
-        for element_to_remove in "${TRUE_EMPTY_FILES[@]}"; do
-            # Iterate over indices of NO_SIZE_FILES to find the matching element
-            for i in "${!NO_SIZE_FILES[@]}"; do
-                if [[ "${NO_SIZE_FILES[$i]}" == "$element_to_remove" ]]; then
-                    # Unset (remove) the matching element from NO_SIZE_FILES
-                    unset 'NO_SIZE_FILES[i]'
-                fi
-            done
-        done
+        mapfile -t RECALL_FILES < <(comm -23 <(printf "%s\n" "${NO_SIZE_FILES[@]}" | sort) <(printf "%s\n" "${TRUE_EMPTY_FILES[@]}" | sort))
 
-        # Re-index the array after removal
-        NO_SIZE_FILES=("${NO_SIZE_FILES[@]}")
-
-        local RECALL_FILE_CNT=${#NO_SIZE_FILES[@]}
+        local RECALL_FILE_CNT=${#RECALL_FILES[@]}
         if [ ${RECALL_FILE_CNT} -gt 0 ]; then
             echo "Recalling ${RECALL_FILE_CNT} files to GPFS..."
             module load parallel
-            printf "%s\n" "${NO_SIZE_FILES[@]}" | parallel -j ${SLURM_CPUS_ON_NODE} head -c1 {} >/dev/null
+            printf "%s\n" "${RECALL_FILES[@]}" | parallel -j ${SLURM_CPUS_ON_NODE} head -c1 {} >/dev/null
         else
             echo "Requested files in ${DIR2RECALL} are already in GPFS, nothing needs to be done."
         fi
