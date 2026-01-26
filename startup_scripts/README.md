@@ -1,25 +1,33 @@
 # Common Startup Scripts
+
 Scripts to create shared bash and zsh commands for Cheaha.
 
 ## Scripts
+
 ### `.recommended_startup_commands`
-A script with all recommended commands based on commonly used pipelines, directories, and tools. 
+
+A script with all recommended commands based on commonly used pipelines, directories, and tools.
+
 #### **How to use**
+
 Locate `.bashrc` and `.zshrc` in the `$HOME` directory and add the following lines:
+
 ```bash
 if [ -f "/data/project/worthey_lab/tools/learnings_journal/startup_scripts/.recommended_startup_commands"]; then
     . "/data/project/worthey_lab/tools/learnings_journal/startup_scripts/.recommended_startup_commands"
 fi
 ```
+
 #### **commands**
+
 | Command                                | Purpose                                                                                                                             |
 |----------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------|
 | projects                               | Change directory to the projects directory (`/data/project/worthey_lab/projects`)                                                   |
 | worthey_lab                            | Change directory to the lab space (`/data/project/worthey_lab`)                                                                     |
-| exp_pipes \<directory_name\> | Change directory to experimental pipelines directory (`/data/project/worthey_lab/projects/experimental_pipelines/<directory_name>`) |
+| exp_pipes \<directory_name\>           | Change directory to experimental pipelines directory (`/data/project/worthey_lab/projects/experimental_pipelines/<directory_name>`) |
 | scratch                                | Change directory to user scratch directory                                                                                          |
-| codicem                                | Load codicem                                                                                                                        |
-| congenica                              | Load congenica                                                                                                                      |
+| recall_dir \<directory\>               | recall all files in a directory to GPFS (from CEPH)                                                                                 |
+| recall_git                             | recall all tracked files in a git repo                                                                                              |
 | smvp_logs                              | Change directory to logs for small variant caller pipeline                                                                          |
 | smvp_stat n                            | Get status of jobs running small variant caller pipeline                                                                            |
 | svp_logs                               | Change directory to logs for manta sv caller pipeline                                                                               |
@@ -31,20 +39,25 @@ fi
 | SQ                                     | Well formatted squeue                                                                                                               |
 | SQ_long                                | Well formatted squeue with submission time and command ran info                                                                     |
 | njobs                                  | Number of jobs running                                                                                                              |
-| scontr jobid                           | Information for a particular job (*Note: This alias only works for currently running jobs and not for completed/pending jobs*)                                                                                                    |
-| SR jobid                               | Status information for a job (*Note: This alias only works for currently running jobs and not for completed/pending jobs*)                                                                                                       |
-
+| scontr jobid                           | Information for a particular job (*Note: This alias only works for currently running jobs and not for completed/pending jobs*)      |
+| SR jobid                               | Status information for a job (*Note: This alias only works for currently running jobs and not for completed/pending jobs*)          |
 
 ### `.helpful_startup_commands`
+
 This script contains optional commands that are useful.
+
 #### **How to use**
+
 Locate `.bashrc` and `.zshrc` in `$HOME` and add the following lines:
+
 ```bash
 if [ -f "/data/project/worthey_lab/tools/learnings_journal/startup_scripts/.helpful_startup_commands"]; then
     . "/data/project/worthey_lab/tools/learnings_journal/startup_scripts/.helpful_startup_commands"
 fi
-``` 
+```
+
 #### **commands**
+
 | Command               | Purpose                                                                                            |
 |-----------------------|----------------------------------------------------------------------------------------------------|
 | rmi file              | Interactive remove                                                                                 |

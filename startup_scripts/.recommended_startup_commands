@@ -1,9 +1,5 @@
-module reset
-module load slurm
-module load git/2.8.0-foss-2016a
-
 # Directory change
-function experimental_pipelines(){
+function experimental_pipelines() {
     if [ "$#" -ne 1 ]; then
         echo "Usage:"
         echo "experimemtal_pipeline directory_name"
@@ -17,37 +13,17 @@ alias worthey_lab="cd /data/project/worthey_lab"
 alias exp_pipes=experimental_pipelines
 alias scratch="cd $USER_SCRATCH"
 
-# codicem
-function load_codicem(){
-    conda activate codicem_env
-    cd /data/project/worthey_lab/tools/codicem/codicem-provision/sample-loader/cluster
-}
-
-alias codicem=load_codicem
-
-# congenica
-function load_congenica(){
-    module reset
-    module load Python/2.7.13-foss-2016b
-    source /data/project/worthey_lab/tools/sapientia-client-2.3.0.3/congenica/bin/activate  # commented out by conda initialize
-    sapientia test
-}
-
-alias congenica=load_congenica
-
 # pipeline
-function status_smvp(){
+function status_smvp() {
     find "$SMVP_LOGS_DIR" -maxdepth 1 -name "*.err" -mtime -$1 -print0 | xargs -0 /data/project/worthey_lab/tools/pipeline-status-scripts/pretty_status_snakemake_pipeline.sh
 }
 
-function status_svp(){
+function status_svp() {
     find "$SVP_LOGS_DIR" -maxdepth 1 -name "*.err" -mtime -$1 -print0 | xargs -0 /data/project/worthey_lab/tools/pipeline-status-scripts/pretty_status_snakemake_pipeline.sh
 }
 
-SMVP_LOGS_DIR="/data/project/worthey_lab/projects/production_pipelines/logs/small_variant_caller_pipeline/"
-SVP_LOGS_DIR="/data/project/worthey_lab/projects/production_pipelines/logs/manta_sv_caller_pipeline/"
-export SMVP_LOGS_DIR
-export SVP_LOGS_DIR
+export SMVP_LOGS_DIR="/data/project/worthey_lab/projects/production_pipelines/logs/small_variant_caller_pipeline/"
+export SVP_LOGS_DIR="/data/project/worthey_lab/projects/production_pipelines/logs/manta_sv_caller_pipeline/"
 
 alias smvp_logs="cd $SMVP_LOGS_DIR"
 alias svp_logs="cd $SVP_LOGS_DIR"
@@ -64,7 +40,7 @@ srun_custom() {
     fi
 }
 
-function better_format_sacct(){
+function better_format_sacct() {
     sacct --format="JobID,JobName,Ntasks,MaxRSS,Elapsed,state,NodeList,ReqMem,MaxVMSize,AveVMSize,Partition,AllocTRES%40" --units=M "$@"
 }
 
@@ -74,7 +50,62 @@ alias srun_medium="srun --ntasks=1 --cpus-per-task=4 --mem-per-cpu=4096 --partit
 alias SC=better_format_sacct
 
 alias SQ='squeue -o "%.8i %.20j %.10P %.7u %.5D %.4C %.11M  %.11l %.3t %.11m %R" -u $USER'
-alias SQ_long='squeue -o "%.8i %.20j %.10P %.7u %.5D %.11M  %.11l %.3t %.11m %R %V %o" -u $USER' 
+alias SQ_long='squeue -o "%.8i %.20j %.10P %.7u %.5D %.11M  %.11l %.3t %.11m %R %V %o" -u $USER'
 alias njobs="SQ -h | wc -l"
 alias scontr='scontrol show job -d'
 alias SR='sstat --format="JobID,NTasks,AveCPU,AvePages,AveRSS,AveVMSize,MaxRSSNode" --allsteps'
+
+# GPFS
+# general file recall function
+function gen_file_recall() {
+    if [ ! -n "${SLURM_JOB_ID+x}" ]; then
+        echo "Error: can't run GPFS file recall on login node. File recall to GPFS should only be run on compute nodes."
+        echo "Solution: Consider starting an interactive job and running this command there."
+    else
+        local DIR2RECALL="$(realpath $1)"
+        local LISTING_METHOD="$2"
+
+        if [[ "${LISTING_METHOD}" == "git" ]]; then
+            # get list of files that are truly empty files (eg. .gitkeep) tracked by the repo
+            mapfile -t TRUE_EMPTY_FILES < <(git ls-files | xargs du --apparent-size | awk '($1 == 0){print $2}')
+
+            # get list of files that `du` returns zero blocks used on disk (GPFS in this case) for files that are on CEPH
+            mapfile -t NO_SIZE_FILES < <(git ls-files | xargs du | awk '($1 == 0){print $2}')
+        else
+            # get list of files that are truly empty files (eg. .gitkeep) tracked by the repo
+            mapfile -t TRUE_EMPTY_FILES < <(find "${DIR2RECALL}" -type f -exec du --apparent-size {} + | awk '($1 == 0){print $2}')
+
+            # get list of files that `du` returns zero blocks used on disk (GPFS in this case) for files that are on CEPH
+            mapfile -t NO_SIZE_FILES < <(find "${DIR2RECALL}" -type f -exec du {} + | awk '($1 == 0){print $2}')
+        fi
+
+        # remove true empty files from list of files with zero disk usage to make a list of files
+        # that actually need to be recalled
+        mapfile -t RECALL_FILES < <(comm -23 <(printf "%s\n" "${NO_SIZE_FILES[@]}" | sort) <(printf "%s\n" "${TRUE_EMPTY_FILES[@]}" | sort))
+
+        local RECALL_FILE_CNT=${#RECALL_FILES[@]}
+        if [ ${RECALL_FILE_CNT} -gt 0 ]; then
+            echo "Recalling ${RECALL_FILE_CNT} files to GPFS..."
+            module load parallel
+            printf "%s\n" "${RECALL_FILES[@]}" | parallel -j ${SLURM_CPUS_ON_NODE} head -c1 {} >/dev/null
+        else
+            echo "Requested files in ${DIR2RECALL} are already in GPFS, nothing needs to be done."
+        fi
+    fi
+}
+
+# recall all files in a directory to GPFS (from CEPH)
+function recall_dir() {
+    if [ "$#" -ne 1 ]; then
+        echo "Usage:"
+        echo "recall_dir <dir-path>"
+    else
+        gen_file_recall "$(realpath $1)" "dir"
+    fi
+}
+
+# recall all tracked files in a git repo so git doesn't think tons of changes happened
+# assumes the current working directory is part of the git repo being recalled
+function recall_git() {
+    gen_file_recall "$(git rev-parse --show-toplevel)" "git"
+}
