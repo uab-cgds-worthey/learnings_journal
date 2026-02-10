@@ -62,8 +62,8 @@ Open: http://localhost:8769
 
 ## Mounts (Quick)
 
-- RStudio: `~/cheaha_home`, `~/cheaha_data`, `~/your_project`
-- VS Code: `/mnt/cheaha_home`, `/mnt/cheaha_data`, `/mnt/your_project`
+- RStudio: `~/cheaha_home`, `~/cheaha_data`, `~/worthey_lab_projects`
+- VS Code: `/mnt/cheaha_home`, `/mnt/cheaha_data`, `/mnt/worthey_lab_projects`
 
 ## Before You Exit
 
@@ -73,3 +73,11 @@ Open: http://localhost:8769
 ## Browser Note
 
 `localhost` works fine in Chrome for me, but Firefox/DuckDuckGo are good alternatives if you run into cookie issues.
+
+## Notes
+
+- For RStudio, you could mount directories to `/mnt/` like VS Code does, but I preferred having them at `/home/$USER/`. Makes it feel more native inside the container.
+- Both containers are persistent across sessions, so your settings and libraries stick around.
+- Change the `worthey_lab_projects` path in the job scripts to whatever you actually need before running.
+
+Last updated: February 10, 2026

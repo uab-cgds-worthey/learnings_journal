@@ -23,3 +23,5 @@ scp code-server_4.108.2.sif your_username@cheaha.rc.uab.edu:~/
 ```
 
 Or just grab it with Cyberduck/FileZilla if you prefer a UI.
+
+Last updated: February 10, 2026

@@ -32,3 +32,5 @@ Or just grab it with Cyberduck/FileZilla if you prefer a UI.
 
 - I tested higher version tags (4.5), but Singularity/Apptainer on CHEAHA works well up to 4.4.2 right now
 - If CHEAHA updates their OS, this might change
+
+Last updated: February 10, 2026
