@@ -14,6 +14,8 @@ Short overview and quick steps for running RStudio Server and VS Code Server on 
 
 ## Run Containers
 
+Note: the job scripts mount all projects under `/data/project/worthey_lab/projects` by default. Feel free to change that to your own project path before running.
+
 ### One-Time Setup
 
 ```bash
@@ -62,3 +64,12 @@ Open: http://localhost:8769
 
 - RStudio: `~/cheaha_home`, `~/cheaha_data`, `~/your_project`
 - VS Code: `/mnt/cheaha_home`, `/mnt/cheaha_data`, `/mnt/your_project`
+
+## Before You Exit
+
+- RStudio: close the project, then quit the session
+- VS Code: close the session before you exit
+
+## Browser Note
+
+`localhost` works fine in Chrome for me, but Firefox/DuckDuckGo are good alternatives if you run into cookie issues.
