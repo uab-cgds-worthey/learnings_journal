@@ -36,7 +36,7 @@ auth-none=1
 secure-cookie-key-file=/home/$USER/secure/secure-cookie-key
 EOF
 
-mkdir -p "$BASE/home"/{cheaha_home,cheaha_data,worthey_lab_projects}
+mkdir -p "$BASE/home"/{cheaha_home,cheaha_data,secure,worthey_lab_projects}
 
 cheaha_usr_home="/home/$USER"
 cheaha_usr_data="/data/user/$USER"
