@@ -58,7 +58,7 @@ Open: http://localhost:8769
 - CHEAHA uses Singularity to run containers
 - Apptainer is only needed locally if you want to build custom containers
 - RStudio build details: see [containers/rstudio/README.md](containers/rstudio/README.md)
-- VS Code build README will be added later
+- VS Code build details: see [containers/vscode/README.md](containers/vscode/README.md)
 
 ## Mounts (Quick)
 
