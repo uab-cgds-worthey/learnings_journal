@@ -7,7 +7,7 @@
 ## Build
 
 ```bash
-apptainer build code-server_4.108.2.sif code-server.def
+apptainer pull code-server_4.108.2.sif docker://codercom/code-server
 ```
 
 That gives you `code-server_4.108.2.sif` to transfer to CHEAHA.
