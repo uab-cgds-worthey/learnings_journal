@@ -46,7 +46,7 @@ export SINGULARITYENV_R_LIBS_USER="/home/$USER/R_libs"
 
 unset R_LIBS R_LIBS_SITE R_HOME
 
-apptainer exec \
+singularity exec \
   --bind "$BASE/home:/home/$USER" \
   --bind "$BASE/run:/run" \
   --bind "$BASE/tmp:/tmp" \

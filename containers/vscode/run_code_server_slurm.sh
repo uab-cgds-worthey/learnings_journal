@@ -24,7 +24,7 @@ cheaha_usr_home="/home/$USER"
 cheaha_usr_data="/data/user/$USER"
 worthey_lab_projects="/data/project/worthey_lab/projects/"  # replace with your own project path
 
-apptainer exec \
+singularity exec \
   --bind "$BASE/home/:/home/$USER" \
   --bind "$BASE/.config:/home/$USER/.config" \
   --bind "$BASE/.cache:/home/$USER/.cache" \
