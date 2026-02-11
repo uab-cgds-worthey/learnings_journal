@@ -7,7 +7,7 @@ Short overview and quick steps for running RStudio Server and VS Code Server on 
 - Runs on compute nodes (not login nodes)
 - Mounts your home, data, and project directories
 - Persistent settings between sessions
-- Pre-built containers live at:
+- Pre-built container images live at:
 ```
 /data/project/worthey_lab/containers_temp
 ```
