@@ -1,0 +1,14 @@
+site_name: CGDS Learnings Journal
+site_description: Notes and tips for computational biology workflows.
+
+nav:
+  - Home: index.md
+  - Containers: containers.md
+  - Snakemake: snakemake.md
+  - Slurm: slurm.md
+  - Random tips and tricks: random_stuff.md
+
+strict: true
+
+theme:
+  name: readthedocs

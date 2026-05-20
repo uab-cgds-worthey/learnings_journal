@@ -15,3 +15,15 @@ Repository to document tips and tricks we learn on how to use certain tools.
 * [Random tips and tricks](./docs/random_stuff.md)
 * [Startup scripts](./startup_scripts)
 * [VScode and remote tunnels](./vscode_remote_tunnel)
+
+## Documentation
+
+This repository uses MkDocs for the documentation site.
+
+```sh
+python3 -m venv venv
+python3 -m pip install -r requirements.txt
+mkdocs serve
+```
+
+The GitHub Actions workflow builds the documentation and deploys it to GitHub Pages after changes are merged to `main` or `master`.
