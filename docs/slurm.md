@@ -1,27 +1,20 @@
-- [Slurm](#slurm)
-  - [Resources](#resources)
-    - [UAB's cheaha](#uabs-cheaha)
-    - [Slurm cheat/reference sheet](#slurm-cheatreference-sheet)
-  - [FAQ](#faq)
-    - [Considerations in best choosing resources for jobs](#considerations-in-best-choosing-resources-for-jobs)
-    - [Use of `mem` vs `mem-per-cpu`](#use-of-mem-vs-mem-per-cpu)
-    - [How busy is cheaha?](#how-busy-is-cheaha)
-
 # Slurm
 
 ## Resources
 
 ### UAB's cheaha
 
-* [Getting Started guide](https://docs.uabgrid.uab.edu/wiki/Cheaha_GettingStarted)
+* [Getting Started guide](https://docs.rc.uab.edu/cheaha/getting_started/)
+* [Introduction to Slurm on Cheaha](https://docs.rc.uab.edu/cheaha/slurm/introduction/)
+* [Cheaha hardware and partition details](https://docs.rc.uab.edu/cheaha/hardware/)
 * Research Computing's training sessions
   * [Job submission and scheduling](https://www.youtube.com/watch?v=G1yBVlPiBfY)
   * [Singularity containers](https://gitlab.rc.uab.edu/rc-training-sessions/singularity_containers/-/tree/master)
 
 ### Slurm cheat/reference sheet
 
-* https://support.nesi.org.nz/hc/en-gb/articles/360000691716-SLURM-Reference-Sheet
-* https://docs.rc.fas.harvard.edu/kb/convenient-slurm-commands/
+* <https://support.nesi.org.nz/hc/en-gb/articles/360000691716-SLURM-Reference-Sheet>
+* <https://docs.rc.fas.harvard.edu/kb/convenient-slurm-commands/>
 * And [Mana's](https://github.com/ManavalanG/random_notes/blob/master/notes/slurm.md) (yup, that's a shameless plug)
 
 

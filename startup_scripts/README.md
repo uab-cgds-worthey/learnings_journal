@@ -1,6 +1,6 @@
 # Common Startup Scripts
 
-Scripts to create shared bash and zsh commands for Cheaha.
+Scripts to create shared bash and zsh commands for [Cheaha](https://docs.rc.uab.edu/cheaha/getting_started/).
 
 ## Scripts
 

@@ -47,7 +47,8 @@ Run the script in slurm cluster.
 >
 > For more info, [see this issue](https://github.com/uab-cgds-worthey/learnings_journal/issues/6).
 
-Following are general instructions on how to start using VScode remote tunneling (based on [RC docs](https://github.com/uabrc/uabrc.github.io/issues/488)):
+Following are general instructions on how to start using VScode remote tunneling, based on UAB Research Computing's
+[VSCode Remote Tunnel docs](https://docs.rc.uab.edu/cheaha/open_ondemand/hpc_desktop/#visual-studio-code-remote-tunnel):
 
 * SSH into [cheaha](https://docs.rc.uab.edu/cheaha/getting_started/)
 * Download code cli tool (standalone binary) in cheaha

@@ -4,7 +4,9 @@
 
 ### Use rsync or Globus?
 
-As per William S. Monroe at Research Computing, Globus is the winner between the two:
+As per William S. Monroe at Research Computing, Globus is the winner between the two. UAB Research Computing also has
+current docs for [Globus](https://docs.rc.uab.edu/data_management/transfer/globus/) and other
+[data transfer tools](https://docs.rc.uab.edu/data_management/transfer/).
 
 > 1. If you’ve got more bandwidth, Globus gets faster (has some parallelism built in)
 > 2. Globus is a managed transfer, so if there is a temporary interruption, it will pick back up

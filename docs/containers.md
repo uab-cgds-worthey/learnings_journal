@@ -1,46 +1,37 @@
-- [Containers](#containers)
-  - [Tutorial resources](#tutorial-resources)
-  - [Singularity](#singularity)
-    - [Troubleshooting:](#troubleshooting)
-      - [Using snakemake with Singularity and Conda](#using-snakemake-with-singularity-and-conda)
-  - [Using docker containers from private gitlab registry](#using-docker-containers-from-private-gitlab-registry)
-    - [Docker](#docker)
-    - [Singularity](#singularity-1)
-
 # Containers
 
 ## Tutorial resources
 
+* [UAB Research Computing's software containers guide](https://docs.rc.uab.edu/workflow_solutions/getting_containers/)
 * [Research Computing's tutorial on Singularity](https://gitlab.rc.uab.edu/rc-training-sessions/singularity_containers/-/tree/master)
 
 
 ## Singularity
 
-- By default singularity bind mounts `/home/$USER`, `/tmp`, and `$PWD` into your container at runtime. [Source](https://singularity.lbl.gov/quickstart#working-with-files).
-  - If mounting home is undesirable, it may be turned off. For singularity run, these options are available:
+- By default, Singularity bind mounts `/home/$USER`, `/tmp`, and `$PWD` into your container at runtime. [Source](https://singularity.lbl.gov/quickstart#working-with-files).
+- For Cheaha-specific Singularity path and bind-mount behavior, see [UAB Research Computing's container guide](https://docs.rc.uab.edu/workflow_solutions/getting_containers/#singularity-paths).
+- If mounting home is undesirable, it may be turned off. For `singularity run`, these options are available:
 
-    ```sh
-    -H|--home <spec>    A home directory specification.  spec can either be a
-                        src path or src:dest pair.  src is the source path
-                        of the home directory outside the container and dest
-                        overrides the home directory within the container
-    --no-home           Do NOT mount users home dire
-    ```
+```sh
+-H|--home <spec>    A home directory specification.  spec can either be a
+                    src path or src:dest pair.  src is the source path
+                    of the home directory outside the container and dest
+                    overrides the home directory within the container
+--no-home           Do NOT mount users home dire
+```
 
-    - Use `--no-home` if mounting home dir is not needed or undesirable.
-    - Use`--home` if the container expects a home directory. Example usage:  `--home ${PWD}/tmp:$HOME`
+- Use `--no-home` if mounting the home directory is not needed or is undesirable.
+- Use `--home` if the container expects a home directory. Example usage: `--home ${PWD}/tmp:$HOME`
 
-  - IT would be happy if tmp directory is pointed instead to a scratch directory, as singularity containers may fill /tmp up fast.
-    - Example: `--bind /data/user/jdoe/tmp:/tmp`
-  - If you develop and build container first with docker and then pull into singularity, follow the [suggestions from Singularity folks](https://singularity.lbl.gov/quickstart#working-with-files) to avoid surprises.
+- IT would be happy if tmp directory is pointed instead to a scratch directory, as singularity containers may fill /tmp up fast.
+  - Example: `--bind /data/user/jdoe/tmp:/tmp`
+- If you develop and build container first with docker and then pull into singularity, follow the [suggestions from Singularity folks](https://singularity.lbl.gov/quickstart#working-with-files) to avoid surprises.
 
-
-
-### Troubleshooting:
+### Troubleshooting
 
 #### Using snakemake with Singularity and Conda
 
-- When using singularity+conda with snakemake, node's `/tmp` get used during creation of conda environment instead of user-supplied directory via singularity's `--bind` option. I reported this bug here - https://github.com/snakemake/snakemake/issues/193.
+- When using singularity+conda with snakemake, node's `/tmp` get used during creation of conda environment instead of user-supplied directory via singularity's `--bind` option. I reported this bug here - <https://github.com/snakemake/snakemake/issues/193>.
   - This doesn't affect the jobs run by snakemake, thankfully.
   - Solution: Workaround is to create conda environment in compute node and when snakemake fails with `CreateCondaEnvironmentException` and `NoSpaceLeftError`, then:
     - remove dir `/tmp/conda` from that node manually
@@ -50,7 +41,7 @@
 
 ## Using docker containers from private gitlab registry
 
-Gitlab's docs - https://docs.gitlab.com/ee/user/packages/container_registry/#authenticating-to-the-gitlab-container-registry
+Gitlab's docs - <https://docs.gitlab.com/ee/user/packages/container_registry/#authenticating-to-the-gitlab-container-registry>
 
 ### Docker
 
