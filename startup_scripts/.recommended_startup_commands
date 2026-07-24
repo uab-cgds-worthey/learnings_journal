@@ -8,26 +8,37 @@ function experimental_pipelines() {
     fi
 }
 
-alias projects="cd /data/project/worthey_lab/projects"
-alias worthey_lab="cd /data/project/worthey_lab"
+export LAB="/data/project/worthey_lab"
+alias projects="cd ${LAB}/projects"
+alias worthey_lab="cd ${LAB}"
 alias exp_pipes=experimental_pipelines
 alias scratch="cd $USER_SCRATCH"
 
-# pipeline
-function status_smvp() {
-    find "$SMVP_LOGS_DIR" -maxdepth 1 -name "*.err" -mtime -$1 -print0 | xargs -0 /data/project/worthey_lab/tools/pipeline-status-scripts/pretty_status_snakemake_pipeline.sh
+# pipeline functions/aliases
+
+# find all gubernomics stderr log files modified within the last n days (n is a user supplied number)
+# and pass their SLURM Job ID(s) to sacct to display status of gubernomics pipeline runs
+# example usage: guberstat 1
+guberstat() {
+    find "${LAB}/projects/production_pipelines/logs/gubernomics" -maxdepth 1 -name "*.err" -mtime -"$1" -print0 | xargs -0 -I {} basename {} | cut -d'.' -f5 | paste -sd, | xargs -I {} sacct --format="JobID,JobName%30,Ntasks,MaxRSS,Elapsed,state%20,NodeList,Partition%30,AllocTRES%40" --units=G -j {}
+}
+
+# find all SLURM Job IDs a snakemake pipeline has submitted (parsed from pipeline's stderr log file)
+# and pass their SLURM Job IDs to sacct to display status of all SLURM jobs submitted by pipeline
+# example usage: snakestat ${LAB}/projects/production_pipelines/logs/gubernomics/GUBERNOMICS-2026-07-20T10.11.31.056543.39421886.err
+snakestat() {
+    awk 'BEGIN{idlist = ""}{if (match($0, /Job ([0-9]+) has been submitted with SLURM jobid ([0-9]+)/, arr) || match($0, /Submitted job ([0-9]+) with external jobid \047([0-9]+)\047./, arr)) { if(idlist == ""){idlist = arr[2]}else{idlist = idlist "," arr[2] }}} END{ print idlist}' "$1" | xargs -I {} sacct --format="JobID,JobName%30,Ntasks,MaxRSS,Elapsed,state%20,NodeList,Partition%30,AllocTRES%40" --units=G -j {}
 }
 
 function status_svp() {
-    find "$SVP_LOGS_DIR" -maxdepth 1 -name "*.err" -mtime -$1 -print0 | xargs -0 /data/project/worthey_lab/tools/pipeline-status-scripts/pretty_status_snakemake_pipeline.sh
+    find "$SVP_LOGS_DIR" -maxdepth 1 -name "*.err" -mtime -$1 -print0 | xargs -0 ${LAB}/tools/pipeline-status-scripts/pretty_status_snakemake_pipeline.sh
 }
 
-export SMVP_LOGS_DIR="/data/project/worthey_lab/projects/production_pipelines/logs/small_variant_caller_pipeline/"
-export SVP_LOGS_DIR="/data/project/worthey_lab/projects/production_pipelines/logs/manta_sv_caller_pipeline/"
+export SVP_LOGS_DIR="${LAB}/projects/production_pipelines/logs/manta_sv_caller_pipeline/"
+export GUBER_LOGS_DIR="${LAB}/projects/production_pipelines/logs/gubernomics"
 
-alias smvp_logs="cd $SMVP_LOGS_DIR"
 alias svp_logs="cd $SVP_LOGS_DIR"
-alias smvp_stat=status_smvp
+alias guber_logs="cd ${GUBER_LOGS_DIR}"
 alias svp_stat=status_svp
 
 # SLURM
