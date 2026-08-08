@@ -1,0 +1,114 @@
+Bootstrap: docker
+From: rocker/rstudio:4.4.2
+
+# RStudio Container Definition
+# For CHEAHA HPC at UAB
+# Build with: apptainer build rstudio_custom_4.4.2.sif rstudio.def
+
+%post
+  set -eux
+  
+  # Ensure apt sources exist (CHEAHA uses noble)
+  cat > /etc/apt/sources.list <<'EOF'
+deb http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu noble-security main restricted universe multiverse
+EOF
+
+  apt-get update
+
+  # Core build toolchain
+  apt-get install -y --no-install-recommends \
+    pkgconf ca-certificates \
+    build-essential cmake ninja-build \
+    libssl-dev libxml2-dev \
+    zlib1g-dev libbz2-dev liblzma-dev \
+    libzstd-dev liblz4-dev libsnappy-dev libbrotli-dev
+
+  # Try t64 curl dev first (noble), fall back to non-t64
+  apt-get install -y --no-install-recommends libcurl4t64-openssl-dev || \
+    apt-get install -y --no-install-recommends libcurl4-openssl-dev
+
+  # Full build toolchain with gfortran
+  apt-get install -y --no-install-recommends \
+    build-essential gfortran pkg-config cmake ninja-build \
+    autoconf automake libtool make \
+    git curl wget ca-certificates \
+    perl python3 python3-pip
+
+  # Install micromamba for conda environments
+  mkdir -p /opt/micromamba/bin
+  curl -Ls https://micro.mamba.pm/api/micromamba/linux-64/latest \
+    | tar -xvj -C /opt/micromamba/bin --strip-components=1 bin/micromamba
+
+  # Optional: Create CNVkit environment (bioinformatics)
+  /opt/micromamba/bin/micromamba create -y -p /opt/conda/envs/cnvkit \
+    -c conda-forge -c bioconda \
+    python=3.10 cnvkit "pandas<2" samtools bedtools bcftools tabix
+
+  /opt/micromamba/bin/micromamba clean -a -y
+
+  # Python scientific packages
+  apt-get install -y --no-install-recommends \
+    python3-numpy python3-scipy python3-matplotlib \
+    python3-reportlab \
+    python3-biopython python3-pyfaidx \
+    python3-pysam python3-venv
+
+  # Core R package development headers
+  apt-get install -y --no-install-recommends \
+    zlib1g-dev libbz2-dev liblzma-dev \
+    libcurl4-openssl-dev libssl-dev libxml2-dev \
+    libpng-dev libjpeg-dev libtiff-dev \
+    libreadline-dev
+
+  # Text rendering / graphics support
+  apt-get install -y --no-install-recommends \
+    libcairo2-dev libpango1.0-dev \
+    libharfbuzz-dev libfribidi-dev \
+    libfreetype6-dev libfontconfig1-dev
+
+  # Scientific computing libraries
+  apt-get install -y --no-install-recommends \
+    libicu-dev libffi-dev libsodium-dev \
+    libgmp-dev libmpfr-dev \
+    libopenblas-dev liblapack-dev
+
+  # Database connectivity
+  apt-get install -y --no-install-recommends \
+    libsqlite3-dev libpq-dev default-libmysqlclient-dev unixodbc-dev
+
+  # Arrow & compression codecs (for data processing)
+  apt-get install -y --no-install-recommends \
+    libsnappy-dev libzstd-dev liblz4-dev libbrotli-dev
+
+  # Optional JavaScript engine (some R packages)
+  apt-get install -y --no-install-recommends libv8-dev || true
+
+  # HDF5 & NetCDF (genomics, climate data)
+  apt-get install -y --no-install-recommends \
+    libhdf5-dev libnetcdf-dev
+
+  # Bioinformatics tools (for NF1 Rat project)
+  apt-get install -y --no-install-recommends \
+    libhts-dev samtools bcftools tabix bedtools
+
+  # Geospatial stack (sf, terra, units)
+  apt-get install -y --no-install-recommends \
+    libudunits2-dev libgdal-dev gdal-bin \
+    libgeos-dev libproj-dev proj-bin
+
+  # Java (for rJava, GATK, etc.)
+  apt-get install -y --no-install-recommends default-jdk || true
+
+  apt-get clean
+  rm -rf /var/lib/apt/lists/*
+
+%environment
+  # Make micromamba and conda environments available
+  export PATH="/opt/micromamba/bin:$PATH"
+  export MAMBA_ROOT_PREFIX=/opt/conda
+
+%runscript
+  exec "$@"
